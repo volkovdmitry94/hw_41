@@ -8,7 +8,6 @@ const GameBoard = () => {
     const [page, setPage] = useState('Board');
     const [computerScores, setComputerScores] = useState(0);
     const [playerScores, setPlayerScores] = useState(0);
-    const [countRounds, setCountRounds] = useState(1);
     const context = useContext(AppContext);
 
     const countScores = (array) => {
@@ -24,9 +23,12 @@ const GameBoard = () => {
     const nextCards = () => {
         const newDeck = deckData.slice();
         newDeck.splice(0, 2);
-        countScores(newDeck);
-        setDeckData(newDeck);
-        setCountRounds(countRounds + 1);
+        if (newDeck.length > 0) {
+            countScores(newDeck);
+            setDeckData(newDeck);
+        } else {
+            setPage('End');
+        }
     }
 
     const cardNameFirst = deckData[0].cardName;
@@ -40,10 +42,7 @@ const GameBoard = () => {
                 <div className="redText">{computerScores}-{playerScores}</div>
                 <img className="card" src={require(`../imagesCards/${cardNameLast}.png`)} alt={cardNameLast}/>
                 <div className="flexRow">
-                    <button
-                        onClick={(countRounds < 26) ? nextCards : setPage('End')}
-                        className="btn">next
-                    </button>
+                    <button onClick={() => nextCards()} className="btn">next</button>
                     <div>{context.name}</div>
                 </div>
             </div> :
